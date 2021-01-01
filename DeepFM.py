@@ -306,12 +306,6 @@ class DeepFM(nn.Module):
         return self.history
 
     def evaluate(self, x, y, batch_size=256):
-        """
-        :param x: Numpy array of test data (if the model has a single input), or list of Numpy arrays (if the model has multiple inputs).
-        :param y: Numpy array of target (label) data (if the model has a single output), or list of Numpy arrays (if the model has multiple outputs).
-        :param batch_size: Integer or `None`. Number of samples per evaluation step. If unspecified, `batch_size` will default to 256.
-        :return: Dict contains metric names and metric values.
-        """
         pred_ans = self.predict(x, batch_size)
         eval_result = {}
         for name, metric_fun in self.metrics.items():
@@ -319,12 +313,6 @@ class DeepFM(nn.Module):
         return eval_result
 
     def predict(self, x, batch_size=256):
-        """
-
-        :param x: The input data, as a Numpy array (or list of Numpy arrays if the model has multiple inputs).
-        :param batch_size: Integer. If unspecified, it will default to 256.
-        :return: Numpy array(s) of predictions.
-        """
         model = self.eval()
         if isinstance(x, dict):
             x = [x[feature] for feature in self.feature_index]
@@ -420,38 +408,11 @@ def combined_dnn_input(sparse_embedding_list, dense_value_list):
 
 
 def slice_arrays(arrays, start=None, stop=None):
-    """Slice an array or list of arrays.
-
-    This takes an array-like, or a list of
-    array-likes, and outputs:
-        - arrays[start:stop] if `arrays` is an array-like
-        - [x[start:stop] for x in arrays] if `arrays` is a list
-
-    Can also work on list/array of indices: `slice_arrays(x, indices)`
-
-    Arguments:
-        arrays: Single array or list of arrays.
-        start: can be an integer index (start index)
-            or a list/array of indices
-        stop: integer (stop index); should be None if
-            `start` was a list.
-
-    Returns:
-        A slice of the array(s).
-
-    Raises:
-        ValueError: If the value of start is a list and stop is not None.
-    """
-
-    if arrays is None:
-        return [None]
-
     if isinstance(arrays, np.ndarray):
         arrays = [arrays]
 
     if isinstance(start, list) and stop is not None:
-        raise ValueError('The stop argument has to be None if the value of start '
-                         'is a list.')
+        raise ValueError('The stop argument has to be None if the value of start is a list.')
     elif isinstance(arrays, list):
         if hasattr(start, '__len__'):
             # hdf5 datasets only support list objects as indices
