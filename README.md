@@ -1,2 +1,2 @@
 # Movie-Recommender-System
-SJTU ai project
+SJTU AI课程 AU332 project
